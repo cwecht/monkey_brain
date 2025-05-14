@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!-- test that an external transition exits all states up the the LCCA -->
+<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:conf="http://www.w3.org/2005/scxml-conformance" initial="s1" version="1.0">
+  <state id="s1">
+    <onentry>
+      <raise event="foo"/>
+      <raise event="bar"/>
+    </onentry>
+    <transition target="p"/>
+  </state>
+  <state id="s2">
+    <onexit>
+      <script>val5 := val5 + 1</script>
+    </onexit>
+    <parallel id="p">
+      <onexit>
+        <script>val1 := val1 + 1</script>
+      </onexit>
+      <transition event="foo" target="ps1">
+        <script>val4 := val4 + 1</script>
+      </transition>
+      <!-- make sure the transition on foo was actually taken -->
+      <transition event="bar" cond="val4 == 1" target="s3"/>
+      <transition event="bar" target="conf:fail"/>
+      <state id="ps1">
+        <onexit>
+          <script>val2 := val2 + 1</script>
+        </onexit>
+      </state>
+      <state id="ps2">
+        <onexit>
+          <script>val3 := val3 + 1</script>
+        </onexit>
+      </state>
+    </parallel>
+  </state>
+  <state id="s3">
+    <!-- make sure that p was exited twice -->
+    <transition cond="val1 == 2" target="s4"/>
+    <transition target="conf:fail"/>
+  </state>
+  <state id="s4">
+    <!-- make sure that ps1 was exited twice -->
+    <transition cond="val2 == 2" target="s5"/>
+    <transition target="conf:fail"/>
+  </state>
+  <state id="s5">
+    <!-- make sure that ps2 was exited twice -->
+    <transition cond="val3 == 2" target="s6"/>
+    <transition target="conf:fail"/>
+  </state>
+  <state id="s6">
+    <!-- make sure that s1 was exited once -->
+    <transition cond="val5 == 1" target="conf:pass"/>
+    <transition target="conf:fail"/>
+  </state>
+  <state id ="conf:pass"/>
+  <state id ="conf:fail"/>
+</scxml>

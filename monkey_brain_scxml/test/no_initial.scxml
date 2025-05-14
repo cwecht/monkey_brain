@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0">
+  <state id="first"/>
+  <state id="second">
+    <parallel id="parallel">
+      <state id="first_parallel">
+         <state id="a"/>
+         <state id="b"/>
+      </state>
+      <state id="second_parallel">
+         <state id="c"/>
+         <state id="d"/>
+      </state>
+    </parallel>
+  </state>
+</scxml>

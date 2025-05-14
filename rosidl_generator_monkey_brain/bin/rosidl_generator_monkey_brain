@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+import sys
+
+try:
+    from rosidl_generator_monkey_brain import generate_monkey_brain_plugins
+except ImportError:
+    # modifying sys.path and importing the Python package with the same
+    # name as this script does not work on Windows
+    rosidl_generator_monkey_brain_root = os.path.dirname(os.path.dirname(__file__))
+    rosidl_generator_monkey_brain_module = os.path.join(
+        rosidl_generator_monkey_brain_root, 'rosidl_generator_monkey_brain', '__init__.py')
+    if not os.path.exists(rosidl_generator_monkey_brain_module):
+        raise
+    from importlib.machinery import SourceFileLoader
+
+    loader = SourceFileLoader('rosidl_generator_monkey_brain', rosidl_generator_monkey_brain_module)
+    rosidl_generator_monkey_brain = loader.load_module()
+    generate_monkey_brain_plugins = rosidl_generator_monkey_brain.generate_monkey_brain_plugins
+
+
+def main(argv=sys.argv[1:]):
+    parser = argparse.ArgumentParser(
+        description='Generate the C++ ROS interfaces.',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument(
+        '--generator-arguments-file',
+        required=True,
+        help='The location of the file containing the generator arguments')
+    args = parser.parse_args(argv)
+
+    generate_monkey_brain_plugins(args.generator_arguments_file)
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -1,0 +1,10 @@
+<library path="timer_io_plugin">
+  <class name="timer/Inputter"
+	 type="monkey_brain_core::IOPluginFactoryImpl&lt;TimerPlugin&gt;"
+	 base_class_type="monkey_brain_core::IOPluginFactory">
+    <description>A periodic timer, which will create an event &lt;prefix&gt; each &lt;period&gt;.
+
+parameters: 1
+ - period: the period of the timer</description>
+  </class>
+</library>

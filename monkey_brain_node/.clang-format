@@ -1,0 +1,9 @@
+﻿---
+BasedOnStyle: Google
+AllowAllConstructorInitializersOnNextLine: 'false'
+AllowShortFunctionsOnASingleLine: Empty
+BreakConstructorInitializers: BeforeComma
+ConstructorInitializerAllOnOneLineOrOnePerLine: 'false'
+IndentWidth: '2'
+UseTab: Never
+...

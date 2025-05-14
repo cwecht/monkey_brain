@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- test that eventless transitions take precedence over event-driven ones -->
+<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:conf="http://www.w3.org/2005/scxml-conformance" version="1.0" initial="s1">
+  <state id="s1">
+    <onentry>
+      <raise event="internalEvent"/>
+      <send event="externalEvent"/>
+    </onentry>
+    <transition event="*" target="conf:fail"/>
+    <transition target="conf:pass"/>
+  </state>
+  <state id ="conf:pass"/>
+  <state id ="conf:fail"/>
+</scxml>

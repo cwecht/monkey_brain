@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+ test that the 'initial' value of scxml is respected.  We set the value to deeply nested non-default parallel siblings and
+test that both are entered. 
+-->
+<scxml initial="s11p112 s11p122" version="1.0">
+  <state id="s0">
+    <transition target="conf:fail"/>
+  </state>
+  <state id="s1">
+    <state id="s11" initial="s111">
+      <state id="s111"/>
+      <parallel id="s11p1">
+        <state id="s11p11" initial="s11p111">
+          <state id="s11p111"/>
+          <state id="s11p112">
+            <onentry>
+              <raise event="In_s11p112"/>
+            </onentry>
+          </state>
+        </state>
+        <state id="s11p12" initial="s11p121">
+          <state id="s11p121"/>
+          <state id="s11p122">
+            <transition event="In_s11p112" target="conf:pass"/>
+          </state>
+        </state>
+      </parallel>
+    </state>
+  </state>
+  <state id="conf:pass"/>
+  <state id="conf:fail"/>
+</scxml>

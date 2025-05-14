@@ -1,0 +1,13 @@
+repositories:
+  rosidl/rosidl_core:
+    type: git
+    url: https://github.com/ros2/rosidl_core.git
+    version: jazzy
+  rosidl/rosidl_defaults:
+    type: git
+    url: https://github.com/ros2/rosidl_defaults.git
+    version: jazzy
+  example_interfaces:
+    type: git
+    url: https://github.com/ros2/example_interfaces.git 
+    version: jazzy

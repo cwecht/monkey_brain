@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!-- test that the done.state.id gets generated when we enter the final state of a compound state -->
+<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:conf="http://www.w3.org/2005/scxml-conformance" version="1.0" initial="s1">
+  <state id="s1" initial="s11">
+    <state id="s11" initial="s111">
+      <transition event="done.state.s11" target="conf:pass"/>
+      <state id="s111">
+        <transition target="s11final"/>
+      </state>
+      <final id="s11final"/>
+    </state>
+  </state>
+  <state id="conf:pass"/>
+</scxml>

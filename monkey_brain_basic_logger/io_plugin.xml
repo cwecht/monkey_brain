@@ -1,0 +1,16 @@
+<library path="basic_logger_io_plugin">
+  <class name="basic_logger/Logger"
+	 type="monkey_brain_core::IOPluginFactoryImpl&lt;BasicLoggerPlugin&gt;"
+	 base_class_type="monkey_brain_core::IOPluginFactory">
+    <description>A log command, which will create an log line with &lt;severity&gt; based on &lt;format&gt; when &lt;prefix&gt;/print is performed.
+&lt;format&gt; may contain "{}" which is are place holder. The parameter given via &lt;parameters&gt; will be inserted here.
+The log will be logged in the node's logger.
+
+Please note: only fundamental types (like int32, float64 or string) or arrays of fundamental types can be used!
+
+parameters: 1
+ - format(string): the the format string.
+ - severity(int): the log severity (log level) of the created log messages.
+ - params(string[]): the references to the values to be printed.</description>
+  </class>
+</library>

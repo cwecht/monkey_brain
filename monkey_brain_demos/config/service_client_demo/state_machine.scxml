@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" init="add_two_ints_server_unavailable">
+    <state id="add_two_ints_server_unavailable">
+        <transition event="/add_two_ints/is_ready" cond="/add_two_ints/is_ready" target="add_two_ints_server_is_ready"/>
+    </state> 
+    <state id="add_two_ints_server_is_ready">
+        <onentry><script>
+           /add_two_ints/request/a := 1
+           /add_two_ints/request/b := -5
+           PERFORM /add_two_ints/call
+        </script></onentry>
+        <transition event="/add_two_ints/response" target="answer_received">
+            <script>
+                /log_sum/sum := /add_two_ints/response/sum
+                PERFORM /log_sum/print
+            </script>
+        </transition>
+    </state> 
+    <final id="answer_received"/>
+</scxml>

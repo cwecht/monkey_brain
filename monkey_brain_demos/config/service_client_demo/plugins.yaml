@@ -1,0 +1,11 @@
+io: [
+        { name: "example_interfaces/AddTwoInts/ServiceClient",
+          topic: "/add_two_ints",
+          params: { retry_period: 2000 }
+        },
+        { name: "basic_logger/Logger",
+          topic: "/log_sum",
+          params: { format: "Sum: {}", severity: 20, params: { "sum": "int64" }}
+        }
+]
+operators: []

@@ -1,0 +1,8 @@
+# generated from rosidl_generator_monkey_brain/rosidl_generator_monkey_brain-extras.cmake
+
+include("${CMAKE_CURRENT_LIST_DIR}/register_monkey_brain.cmake")
+rosidl_generator_monkey_brain_extras(
+  "${rosidl_generator_monkey_brain_DIR}/../../../lib/rosidl_generator_monkey_brain/rosidl_generator_monkey_brain"
+  "${rosidl_generator_monkey_brain_DIR}/../../../@PYTHON_INSTALL_DIR@/rosidl_generator_monkey_brain/__init__.py"
+  "${rosidl_generator_monkey_brain_DIR}/../resource"
+)
