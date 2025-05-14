@@ -1,0 +1,7 @@
+<library path="scxml_state_machine_factory">
+  <class name="scxml_state_machine"
+	 type="monkey_brain_scxml::SCXMLStateMachineFactory"
+	 base_class_type="monkey_brain_core::DecisionEngineFactory">
+    <description></description>
+  </class>
+</library>

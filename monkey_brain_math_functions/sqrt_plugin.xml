@@ -1,0 +1,7 @@
+<library path="sqrt">
+  <class name="math/sqrt"
+	 type="monkey_brain_math_functions::SqrtOperatorFactory"
+	 base_class_type="monkey_brain_core::OperatorFactory">
+    <description>Unary function that takes a number and returns its square-root. Works for fixed-point and floating point numbers.</description>
+  </class>
+</library>

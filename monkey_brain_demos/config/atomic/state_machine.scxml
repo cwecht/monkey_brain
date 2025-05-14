@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" initial="one">
+  <state id="one">
+    <onentry><script>PERFORM /timeout_timer/reset_timer</script></onentry>
+	<transition event="/timeout_timer" target="two">
+       <script>/out_topic/data := true; PERFORM /out_topic/publish; PERFORM /logger/print</script>
+	</transition>
+  </state>
+  <state id="two">
+    <onentry><script>PERFORM /timeout_timer/reset_timer</script></onentry>
+    <transition event="/timeout_timer" target="one">
+      <script>/out_topic/data := false; PERFORM /out_topic/publish</script>
+    </transition>
+  </state>
+</scxml>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" initial="running">
+   <history id="hist"/>
+   <history id="hist_deep" type="deep">
+     <transition target="target">
+	<raise event="hist_deep"/>
+     </transition>
+   </history>
+</scxml>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" init="fibonacci_server_unavailable">
+    <state id="fibonacci_server_unavailable">
+        <transition event="/fibonacci/is_ready" cond="/fibonacci/is_ready" target="fibonacci_server_is_ready"/>
+    </state> 
+    <state id="fibonacci_server_is_ready">
+        <onentry><script>
+           /fibonacci/goal/order := 20
+           PERFORM /fibonacci/send_goal
+        </script></onentry>
+        <transition event="/fibonacci/result" target="answer_received">
+            <script>
+                /log_sequence/sequence := /fibonacci/result/sequence
+                PERFORM /log_sequence/print
+            </script>
+        </transition>
+    </state> 
+    <final id="answer_received"/>
+</scxml>

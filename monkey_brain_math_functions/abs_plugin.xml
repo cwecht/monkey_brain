@@ -1,0 +1,7 @@
+<library path="abs">
+  <class name="math/abs"
+	 type="monkey_brain_math_functions::AbsOperatorFactory"
+	 base_class_type="monkey_brain_core::OperatorFactory">
+    <description>Unary function that takes a number and returns its absolute value. Works for fixed-point and floating point numbers.</description>
+  </class>
+</library>

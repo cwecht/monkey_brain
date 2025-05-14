@@ -1,0 +1,10 @@
+<library path="oneshot_timer_io_plugin">
+  <class name="oneshot_timer/Inputter"
+	 type="monkey_brain_core::IOPluginFactoryImpl&lt;OneshotTimerPlugin&gt;"
+	 base_class_type="monkey_brain_core::IOPluginFactory">
+    <description>A oneshot timer, which will create an event &lt;prefix&gt; &lt;timeout&gt;ms after calling &lt;prefix&gt;/reset_timer.
+    
+parameters: 1
+ - timeout: the timeout of the timer</description>
+  </class>
+</library>

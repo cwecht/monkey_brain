@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- simple test of the in() predicate -->
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" conf:datamodel=""
+xmlns:conf="http://www.w3.org/2005/scxml-conformance" initial="p">
+ <parallel id="p">
+   <state id="s0">
+     <transition cond="in_state(&quot;s1&quot;)" target="conf:pass"/> 
+     <transition target="conf:fail"/>
+   </state>
+   <state id="s1"/> 
+ </parallel>
+  <state id="conf:pass"/>
+  <state id="conf:fail"/>
+</scxml>
