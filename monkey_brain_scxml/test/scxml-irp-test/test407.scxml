@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!-- a simple test that onexit handlers work. var1 should be incremented when we leave s0 -->
+<scxml initial="s0" version="1.0">
+  <state id="s0">
+    <onexit>
+      <script>val1 := val1 + 1</script>
+    </onexit>
+    <transition target="s1"/>
+  </state>
+  <state id="s1">
+    <transition cond="val1 == 1" target="conf:pass"/>
+    <transition target="conf:fail"/>
+  </state>
+  <state id ="conf:pass"/>
+  <state id ="conf:fail"/>
+</scxml>

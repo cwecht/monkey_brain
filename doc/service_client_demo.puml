@@ -1,0 +1,14 @@
+@startuml
+[*] --> add_two_ints_server_unavailable
+add_two_ints_server_unavailable --> add_two_ints_server_is_ready: /add_two_ints/is_ready [/add_two_ints/is_ready]
+note right of add_two_ints_server_is_ready : onentry:\n/add_two_ints/request/a := 1\n/add_two_ints/request/b := -5\nPERFORM /add_two_ints/call
+add_two_ints_server_is_ready --> answer_received: /add_two_ints/response 
+note on link
+  /log_sum/sum := /add_two_ints/response/sum
+  PERFORM /log_sum/print
+end note
+            
+state add_two_ints_server_unavailable
+state add_two_ints_server_is_ready
+state answer_received : final state
+@enduml

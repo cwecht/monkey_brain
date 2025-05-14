@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!-- test that executable content in the <initial> transition executes after the onentry handler on the state
+and before the onentry handler of the child states.  Event1, event2, and event3 should occur in that order. -->
+<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:conf="http://www.w3.org/2005/scxml-conformance" initial="s0" version="1.0">
+  <state id="s0" initial="s01">
+    <transition event="event1" target="conf:fail"/>
+    <transition event="event2" target="conf:pass"/>
+    <state id="s01">
+      <onentry>
+        <raise event="event1"/>
+      </onentry>
+      <initial>
+        <transition target="s011">
+          <raise event="event2"/>
+        </transition>
+      </initial>
+      <state id="s011">
+        <onentry>
+          <raise event="event3"/>
+        </onentry>
+        <transition target="s02"/>
+      </state>
+    </state>
+    <state id="s02">
+      <transition event="event1" target="s03"/>
+      <transition event="*" target="conf:fail"/>
+    </state>
+    <state id="s03">
+      <transition event="event2" target="s04"/>
+      <transition event="*" target="conf:fail"/>
+    </state>
+    <state id="s04">
+      <transition event="event3" target="conf:pass"/>
+      <transition event="*" target="conf:fail"/>
+    </state>
+  </state>
+  <!-- end s0 -->
+  <state id="conf:pass"/>
+  <state id="conf:fail"/>
+</scxml>

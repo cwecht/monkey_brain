@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" initial="running">
+    <state id="running">
+	    <onentry><script>PERFORM /onentry</script></onentry>
+	    <onentry><script>PERFORM /onentry2</script></onentry>
+	    <onexit><script>PERFORM /onexit</script></onexit>
+	    <onexit><script>PERFORM /onexit2</script></onexit>
+    </state>
+</scxml>

@@ -1,0 +1,15 @@
+io: [
+        { name: "example_interfaces/Bool/Publisher",
+          topic: "/out_topic"
+        },
+        { name: "oneshot_timer/Inputter",
+          topic: "/timeout_timer",
+          params: { timeout: 1000 }
+        },
+        { name: "basic_logger/Logger",
+          topic: "/logger",
+          params: { format: "Hello World!!", severity: 20, params: {}}
+        },
+]
+
+operators: []

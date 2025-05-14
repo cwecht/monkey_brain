@@ -1,0 +1,11 @@
+io: [
+        { name: "example_interfaces/Fibonacci/ActionClient",
+          topic: "/fibonacci",
+          params: { retry_period: 500 }
+        },
+        { name: "basic_logger/Logger",
+          topic: "/log_sequence",
+          params: { format: "Result: {}", severity: 20, params: { "sequence": "int32[]" }}
+        }
+]
+operators: []

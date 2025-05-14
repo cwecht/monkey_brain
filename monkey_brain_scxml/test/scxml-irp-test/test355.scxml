@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+ test that default initial state is first in document order.  If we enter s0 first we succeed, if s1, failure. 
+-->
+<scxml version="1.0">
+  <state id="s0">
+    <transition target="conf:pass"/>
+  </state>
+  <state id="s1">
+    <transition target="conf:fail"/>
+  </state>
+  <state id ="conf:pass"/>
+  <state id ="conf:fail"/>
+</scxml>

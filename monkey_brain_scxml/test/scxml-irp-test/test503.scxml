@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!-- test that a targetless transition does not exit and reenter its source state -->
+<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:conf="http://www.w3.org/2005/scxml-conformance" initial="s1" version="1.0">
+  <state id="s1">
+    <onentry>
+      <raise event="foo"/>
+      <raise event="bar"/>
+    </onentry>
+    <transition target="s2"/>
+  </state>
+  <state id="s2">
+    <onexit>
+      <script>val1 := val1 + 1</script>
+    </onexit>
+    <transition event="foo">
+      <script>val2 := val2 + 1</script>
+    </transition>
+    <!-- make sure the transition on foo was actually taken -->
+    <transition event="bar" cond="val2 == 1" target="s3"/>
+    <transition event="bar" target="conf:fail"/>
+  </state>
+  <state id="s3">
+    <!-- make sure that s2 was exited only once -->
+    <transition cond="val1 == 1" target="conf:pass"/>
+    <transition target="conf:fail"/>
+  </state>
+  <state id ="conf:pass"/>
+  <state id ="conf:fail"/>
+</scxml>

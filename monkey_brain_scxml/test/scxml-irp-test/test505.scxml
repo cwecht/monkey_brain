@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!-- test that an internal transition does not exit its source state -->
+<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:conf="http://www.w3.org/2005/scxml-conformance" initial="s1" version="1.0">
+  <state id="s1">
+    <onentry>
+      <raise event="foo"/>
+      <raise event="bar"/>
+    </onentry>
+    <onexit>
+      <script>val1 := val1 + 1</script>
+    </onexit>
+    <transition event="foo" type="internal" target="s11">
+      <script>val3 := val3 + 1</script>
+    </transition>
+    <!-- make sure the transition on foo was actually taken -->
+    <transition event="bar" cond="val3 == 1" target="s2"/>
+    <transition event="bar" target="conf:fail"/>
+    <state id="s11">
+      <onexit>
+        <script>val2 := val2 + 1</script>
+      </onexit>
+    </state>
+  </state>
+  <state id="s2">
+    <!-- make sure that s1 was exited once -->
+    <transition cond="val1 == 1" target="s3"/>
+    <transition target="conf:fail"/>
+  </state>
+  <state id="s3">
+    <!-- make sure that s11 was exited twice -->
+    <transition cond="val2 == 2" target="conf:pass"/>
+    <transition target="conf:fail"/>
+  </state>
+  <state id ="conf:pass"/>
+  <state id ="conf:fail"/>
+</scxml>

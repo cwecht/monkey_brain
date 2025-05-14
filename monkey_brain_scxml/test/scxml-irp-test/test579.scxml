@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+ test that default history content is executed correctly.   The Process MUST execute any executable content in the transition after the parent state's onentry handlers, and, in the case where the history pseudo-state is the target of an <initial> transition, 
+the executable content inside the <initial> transition.  However the Processor MUST
+execute this content only if there is no stored history.  Once the history state's
+parent state has been visited and exited, the default history content must not be executed 
+-->
+<scxml version="1.0" initial="s0">
+  <state id="s0">
+    <initial>
+      <transition target="sh1">
+        <raise event="event2"/>
+      </transition>
+    </initial>
+    <onentry>
+      <raise event="event1"/>
+    </onentry>
+    <onexit>
+       <script>val1 := val1 + 1</script>
+    </onexit>
+    <history id="sh1">
+      <transition target="s01">
+        <raise event="event3"/>
+      </transition>
+    </history>
+    <state id="s01">
+      <transition event="event1" target="s02"/>
+      <transition event="*" target="conf:fail"/>
+    </state>
+    <state id="s02">
+      <transition event="event2" target="s03"/>
+      <transition event="*" target="conf:fail"/>
+    </state>
+    <state id="s03">
+      <transition cond="val1 == 0" event="event3" target="s0"/>
+      <transition cond="val1 == 1" event="event1" target="s2"/>
+      <transition event="*" target="conf:fail"/>
+    </state>
+  </state>
+  <state id="s2">
+    <transition event="event2" target="s3"/>
+    <transition event="*" target="conf:fail"/>
+  </state>
+  <state id="s3">
+    <onentry>
+      <raise event="event4"/>
+    </onentry>
+    <transition event="event3" target="conf:fail"/>
+    <transition event="event4" target="conf:pass"/>
+  </state>
+  <state id="conf:pass"/>
+  <state id="conf:fail"/>
+</scxml>

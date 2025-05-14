@@ -1,0 +1,7 @@
+<library path="yasmin_state_observer">
+  <class name="yasmin_state_observer"
+	 type="monkey_brain_yasmin_state_observer::YasminStateObserverFactory"
+	 base_class_type="monkey_brain_scxml::StateMachineObserverFactory">
+    <description></description>
+  </class>
+</library>
