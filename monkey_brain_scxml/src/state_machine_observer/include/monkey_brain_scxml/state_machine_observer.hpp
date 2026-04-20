@@ -17,6 +17,13 @@ public:
   virtual ~StateMachineObserver() = default;
   virtual void initialize(const std::vector<State> & states) = 0;
   virtual void on_state_change(StateNameRange currently_active_states) = 0;
+
+protected:
+  StateMachineObserver() = default;
+  StateMachineObserver(const StateMachineObserver &) = delete;
+  StateMachineObserver(StateMachineObserver &&) = delete;
+  StateMachineObserver & operator=(const StateMachineObserver &) & = delete;
+  StateMachineObserver & operator=(StateMachineObserver &&) & = delete;
 };
 
 class StateMachineObserverFactory
@@ -25,6 +32,13 @@ public:
   virtual ~StateMachineObserverFactory() = default;
   virtual std::unique_ptr<StateMachineObserver> create(monkey_brain_core::Context * context) const =
   0;
+
+protected:
+  StateMachineObserverFactory() = default;
+  StateMachineObserverFactory(const StateMachineObserverFactory &) = delete;
+  StateMachineObserverFactory(StateMachineObserverFactory &&) = delete;
+  StateMachineObserverFactory & operator=(const StateMachineObserverFactory &) & = delete;
+  StateMachineObserverFactory & operator=(StateMachineObserverFactory &&) & = delete;
 };
 
 } // namespace monkey_brain_scxml

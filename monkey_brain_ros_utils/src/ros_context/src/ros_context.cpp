@@ -11,19 +11,19 @@ rclcpp::ParameterValue to_rclcpp_parameter_value(void const * value, const std::
 {
   using monkey_brain_core::Context;
   if (type == typeid(bool)) {
-    static_assert(Context::is_supported<bool>);
+    static_assert(Context::IS_SUPPORTED<bool>);
     return rclcpp::ParameterValue{*static_cast<bool const *>(value)};
   }
   if (type == typeid(int64_t)) {
-    static_assert(Context::is_supported<int64_t>);
+    static_assert(Context::IS_SUPPORTED<int64_t>);
     return rclcpp::ParameterValue{*static_cast<int64_t const *>(value)};
   }
   if (type == typeid(double)) {
-    static_assert(Context::is_supported<double>);
+    static_assert(Context::IS_SUPPORTED<double>);
     return rclcpp::ParameterValue{*static_cast<double const *>(value)};
   }
   if (type == typeid(std::string)) {
-    static_assert(Context::is_supported<std::string>);
+    static_assert(Context::IS_SUPPORTED<std::string>);
     return rclcpp::ParameterValue{*static_cast<std::string const *>(value)};
   } else {
     throw std::runtime_error("unsupported type");
@@ -36,19 +36,19 @@ void const * from_rclcpp_parameter_value(
 {
   using monkey_brain_core::Context;
   if (type == typeid(bool)) {
-    static_assert(Context::is_supported<bool>);
+    static_assert(Context::IS_SUPPORTED<bool>);
     return &value.get<bool>();
   }
   if (type == typeid(int64_t)) {
-    static_assert(Context::is_supported<int64_t>);
+    static_assert(Context::IS_SUPPORTED<int64_t>);
     return &value.get<int64_t>();
   }
   if (type == typeid(double)) {
-    static_assert(Context::is_supported<double>);
+    static_assert(Context::IS_SUPPORTED<double>);
     return &value.get<double>();
   }
   if (type == typeid(std::string)) {
-    static_assert(Context::is_supported<std::string>);
+    static_assert(Context::IS_SUPPORTED<std::string>);
     return &value.get<std::string>();
   } else {
     throw std::runtime_error("unsupported type");
@@ -59,19 +59,19 @@ rclcpp::ParameterType to_rclcpp_type(const std::type_info & type)
 {
   using monkey_brain_core::Context;
   if (type == typeid(bool)) {
-    static_assert(Context::is_supported<bool>);
+    static_assert(Context::IS_SUPPORTED<bool>);
     return rclcpp::ParameterType::PARAMETER_BOOL;
   }
   if (type == typeid(int64_t)) {
-    static_assert(Context::is_supported<int64_t>);
+    static_assert(Context::IS_SUPPORTED<int64_t>);
     return rclcpp::ParameterType::PARAMETER_INTEGER;
   }
   if (type == typeid(double)) {
-    static_assert(Context::is_supported<double>);
+    static_assert(Context::IS_SUPPORTED<double>);
     return rclcpp::ParameterType::PARAMETER_DOUBLE;
   }
   if (type == typeid(std::string)) {
-    static_assert(Context::is_supported<std::string>);
+    static_assert(Context::IS_SUPPORTED<std::string>);
     return rclcpp::ParameterType::PARAMETER_STRING;
   } else {
     throw std::runtime_error("unsupported type");

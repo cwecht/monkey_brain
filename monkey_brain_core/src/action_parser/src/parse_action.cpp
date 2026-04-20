@@ -37,16 +37,25 @@ ActionDescription parse_line(std::string action)
   if (const auto pos = action.find(":="); pos != std::string::npos) {
     std::string first{action.substr(0, pos)};
     boost::trim(first);
+    auto first_expression = parse_expression(first);
     std::string second{action.substr(pos + 2)};
     boost::trim(second);
-    return {":=", {parse_expression(first).value(), parse_expression(second).value()}};
+    auto second_expression = parse_expression(second);
+    if (first_expression and second_expression) {
+      return {":=", {std::move(*first_expression), std::move(*second_expression)}};
+    } else {
+      throw std::invalid_argument("invalid assignment action: " + action);
+    }
   }
 
   const auto first_space = action.find(' ');
   const auto command = action.substr(0, first_space);
   if (command == "PERFORM" || command == "RAISE") {
     const std::string argument{action.substr(first_space + 1)};
-    return {command, {parse_expression(argument).value()}};
+    auto argument_expression = parse_expression(argument);
+    if (argument_expression) {
+      return {command, {std::move(*argument_expression)}};
+    }
   }
 
   throw std::invalid_argument("invalid action: " + action);

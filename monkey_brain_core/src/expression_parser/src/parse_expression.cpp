@@ -81,7 +81,8 @@ ExpressionDescription make_nary_expression(
   const auto end = std::find_if(
     cs.begin(), cs.end(),
     [&](const auto & c) {return op != at_c<0>(c);});
-  sub_expressions.reserve(1 + std::distance(cs.begin(), end));
+  const size_t n_expression = static_cast<size_t>(1L + std::distance(cs.begin(), end));
+  sub_expressions.reserve(n_expression);
   std::transform(
     cs.begin(), cs.end(), std::back_inserter(sub_expressions),
     [](const auto & c) {return at_c<1>(c);});
@@ -100,7 +101,7 @@ std::vector<ExpressionDescription> make_argument_list(
   std::vector<boost::fusion::vector<std::string, ExpressionDescription>> cs)
 {
   std::vector<ExpressionDescription> sub_expressions;
-  sub_expressions.reserve(1 + cs.size());
+  sub_expressions.reserve(1UL + cs.size());
   sub_expressions.push_back(std::move(c0));
   std::transform(
     cs.begin(), cs.end(), std::back_inserter(sub_expressions),
@@ -138,8 +139,10 @@ struct ExpressionDescriptionGrammar
     using qi::lit;
     using qi::hold;
     using qi::omit;
+    // NOLINTNEXTLINE(readability-identifier-naming)
     using strict_double_ = qi::real_parser<double, qi::strict_real_policies<double>>;
 
+    // NOLINTBEGIN(bugprone-chained-comparison)
     negation_op.add("NOT", "NOT")("!", "NOT");
     conjunction_op.add("AND", "AND")("&&", "AND");
     disjunction_op.add("OR", "OR")("||", "OR");
@@ -185,6 +188,7 @@ struct ExpressionDescriptionGrammar
       hold[bool_[_val = to_bool_value(_1)]] |
       identifier[_val = to_reference(_1)]);
     quoted_string %= lexeme['"' >> *(char_ - '"') >> '"'];
+    // NOLINTEND(bugprone-chained-comparison)
   }
 
   Symbols negation_op;

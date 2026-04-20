@@ -24,9 +24,9 @@ struct DecisionEngineInstance
 
 using PluginInstances = std::vector<PluginInstance>;
 
-PluginInstances parse_plugin_instances(const std::string path);
+PluginInstances parse_plugin_instances(const std::string & path);
 
-std::vector<std::string> parse_operator_plugin_instances(const std::string path);
+std::vector<std::string> parse_operator_plugin_instances(const std::string & path);
 
 } // namespace monkey_brain
 #endif // MONKEY_BRAIN_PLUGINS_PARSER_HPP

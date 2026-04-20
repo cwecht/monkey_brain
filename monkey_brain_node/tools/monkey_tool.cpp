@@ -6,12 +6,15 @@
 #include "monkey_brain/plugins_loader.hpp"
 #include "monkey_brain/plugins_parser.hpp"
 
+// NOLINTNEXTLINE(clang-analyzer-optin.cplusplus.VirtualCall)
 #include <pluginlib/class_loader.hpp>
 
 #include <iostream>
 #include <string_view>
 #include <unordered_map>
 
+namespace
+{
 using monkey_brain_core::AccessMode;
 
 std::string to_string(AccessMode mode)
@@ -53,14 +56,14 @@ auto create_decision_engine_plugin_loader()
     "monkey_brain_core::DecisionEngineFactory");
 }
 
-struct identity
+struct Identity
 {
   template<typename T>
   const T & operator()(const T & x) const noexcept {return x;}
 };
 
-template<typename Rng, typename Fun = identity>
-void print_as_list(const Rng & rng, Fun fun = identity{})
+template<typename Rng, typename Fun = Identity>
+void print_as_list(const Rng & rng, Fun fun = Identity{})
 {
   for (const auto & plugin : rng) {
     std::cout << " - " << fun(plugin) << std::endl;
@@ -80,19 +83,20 @@ std::string print_typed_references(const monkey_brain_core::TypedReference & d)
   return d.reference + " {" + d.type + ", " + to_string(d.access_mode) + ")";
 }
 
-int print_io_plugin_list(int argc, const char * argv[])
+int print_io_plugin_list(int argc, const char * const * argv)
 {
   (void)argc; (void)argv;
   print_io_plugin_list("IOPlugins", create_io_plugin_loader());
   return EXIT_SUCCESS;
 }
 
-int print_io_plugin_info(int argc, const char * argv[])
+int print_io_plugin_info(int argc, const char * const * argv)
 {
   if (argc != 3) {
     std::cout << "usage: monkey_tool show_io_plugin <plugin name>" << std::endl;
     return EXIT_FAILURE;
   }
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   const std::string & plugin_name = argv[2];
   auto plugin_loader = create_io_plugin_loader();
   auto p_factory = plugin_loader.createUniqueInstance(plugin_name);
@@ -114,20 +118,21 @@ int print_io_plugin_info(int argc, const char * argv[])
   return EXIT_SUCCESS;
 }
 
-int print_operator_plugin_list(int argc, const char * argv[])
+int print_operator_plugin_list(int argc, const char * const * argv)
 {
   (void)argc; (void)argv;
   print_io_plugin_list("operators", create_operator_plugin_loader());
   return EXIT_SUCCESS;
 }
 
-int print_operator_plugin_info(int argc, const char * argv[])
+int print_operator_plugin_info(int argc, const char * const * argv)
 {
   if (argc != 3) {
     std::cout << "usage: monkey_tool show_operator <plugin name>" << std::endl;
     return EXIT_FAILURE;
   }
-  const std::string & plugin_name = argv[2];
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+  const std::string plugin_name = argv[2];
   auto plugin_loader = create_operator_plugin_loader();
   const std::string description = plugin_loader.getClassDescription(plugin_name);
   if (not description.empty()) {
@@ -138,14 +143,14 @@ int print_operator_plugin_info(int argc, const char * argv[])
   return EXIT_SUCCESS;
 }
 
-int print_decision_engine_plugin_list(int argc, const char * argv[])
+int print_decision_engine_plugin_list(int argc, const char * const * argv)
 {
   (void)argc; (void)argv;
   print_io_plugin_list("decision engines", create_decision_engine_plugin_loader());
   return EXIT_SUCCESS;
 }
 
-int list_available_values(int argc, const char * argv[])
+int list_available_values(int argc, const char * const * argv)
 {
   if (argc < 3) {
     std::cout << "usage: monkey_tool list_available_values <path_to_plugin_config>" <<
@@ -153,6 +158,7 @@ int list_available_values(int argc, const char * argv[])
     return EXIT_FAILURE;
   }
 
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   const std::string config_path = argv[2];
   monkey_brain::PluginLoader plugin_loader;
 
@@ -167,14 +173,17 @@ int list_available_values(int argc, const char * argv[])
   return EXIT_SUCCESS;
 }
 
-int validate(int argc, const char * argv[])
+// NOLINTBEGIN(clang-analyzer-optin.cplusplus.VirtualCall)
+int validate(int argc, const char * const * argv)
 {
-  if (argc < 4) {
+  if (argc > 3) {
     std::cout << "usage: monkey_tool validate <decision_engine> <path_to_plugin_config>" <<
       std::endl;
     return EXIT_FAILURE;
   }
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   const std::string decision_engine = argv[2];
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   const std::string config_path = argv[3];
   monkey_brain::PluginLoader plugin_loader;
 
@@ -198,19 +207,21 @@ int validate(int argc, const char * argv[])
 
   return EXIT_SUCCESS;
 }
+// NOLINTEND(clang-analyzer-optin.cplusplus.VirtualCall)
 
-int usage(int, const char **);
+int usage(int, const char * const *);
 
-int unknown_command(int argc, const char * argv[])
+int unknown_command(int argc, const char * const * argv)
 {
   if (argc > 1) {
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     std::cout << "Unknown command: '" << argv[1] << "'" << std::endl;
   }
   usage(argc, argv);
   return EXIT_FAILURE;
 }
 
-using CommandFunction = int(*)(int, const char *[]);
+using CommandFunction = int(*)(int, const char * const *);
 struct CommandFunctionWithDescription
 {
   CommandFunction command;
@@ -226,7 +237,7 @@ Value lookup_or_default(const Map & map, const typename Map::key_type & key, con
   return (it == map.end()) ? value : it->second;
 }
 
-const CommandToCommandFunctionWithDescription command_to_function {
+const CommandToCommandFunctionWithDescription COMMAND_TO_FUNCTION {
   {"list_io_plugins", {&print_io_plugin_list, "Display a list of all available io plugins."}},
   {"list_operator_plugins",
     {&print_operator_plugin_list, "Display a list of all available operator plugins."}},
@@ -244,34 +255,37 @@ const CommandToCommandFunctionWithDescription command_to_function {
 
 size_t get_max_command_length()
 {
-  return std::max_element(command_to_function.begin(), command_to_function.end(),
+  return std::max_element(COMMAND_TO_FUNCTION.begin(), COMMAND_TO_FUNCTION.end(),
            [] (const auto & lhs, const auto & rhs) {
              return lhs.first.size() < rhs.first.size();
                           })->first.size();
 }
 
-int usage(int, const char **)
+int usage(int, const char * const *)
 {
-  const std::size_t width = get_max_command_length();
+  const int width = static_cast<int>(get_max_command_length());
   std::cout << "usage: monkey_tool <command>" << '\n';
   std::cout << '\n';
   std::cout << "monkey_tool is a helper tool for using monkey brain." << '\n';
   std::cout << '\n';
   std::cout << "Commands:" << '\n';
   std::cout << std::left;
-  for (const auto & [command, fun_d] : command_to_function) {
+  for (const auto & [command, fun_d] : COMMAND_TO_FUNCTION) {
     std::cout << "  " << std::setw(width) << command << " " << fun_d.description << '\n';
   }
   std::cout << std::flush;
   return EXIT_SUCCESS;
 }
 
-int main(int argc, const char * argv[])
+} // namespace
+
+int main(int argc, const char * const * argv)
 {
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   const std::string_view command = argc > 1 ? argv[1] : "";
-  const CommandFunctionWithDescription DEFAULT{&unknown_command, ""};
+  constexpr CommandFunctionWithDescription DEFAULT{&unknown_command, ""};
   try {
-    return lookup_or_default(command_to_function, command, DEFAULT).command(argc, argv);
+    return lookup_or_default(COMMAND_TO_FUNCTION, command, DEFAULT).command(argc, argv);
   } catch (const std::exception & ex) {
     std::cerr << "ERROR: " << ex.what() << std::endl;
     return EXIT_FAILURE;

@@ -16,10 +16,12 @@ struct ExpressionDescription
   std::vector<ExpressionDescription> sub_expressions{};
   std::variant<std::monostate, std::string, uint64_t, int64_t, double, char, bool> arg;
 
-  friend bool operator==(const ExpressionDescription & a, const ExpressionDescription & b) noexcept
+private:
+  decltype(auto) memberwise() const {return std::tie(type, sub_expressions, arg);}
+
+  friend bool operator==(const ExpressionDescription & a, const ExpressionDescription & b)
   {
-    constexpr auto tie = [] (const auto & d) {return std::tie(d.type, d.sub_expressions, d.arg);};
-    return tie(a) == tie(b);
+    return a.memberwise() == b.memberwise();
   }
 };
 

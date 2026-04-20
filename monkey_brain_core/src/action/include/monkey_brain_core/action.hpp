@@ -12,6 +12,13 @@ class Action
 public:
   virtual ~Action() = default;
   virtual void execute() = 0;
+
+protected:
+  Action() = default;
+  Action(const Action &) = delete;
+  Action(Action &&) = delete;
+  Action & operator=(const Action &) & = delete;
+  Action & operator=(Action &&) & = delete;
 };
 
 using Actions = std::vector<std::unique_ptr<Action>>;

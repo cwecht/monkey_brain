@@ -38,7 +38,7 @@ private:
   using TypesAndOpsToExpressionMakerFn =
     std::unordered_map<OperatorDescriptor, ExpressionMakerFn, Hash, EqualTo>;
 
-  TypesAndOpsToExpressionMakerFn to_functional_expression_maker;
+  TypesAndOpsToExpressionMakerFn to_functional_expression_maker_;
 };
 
 } // namespace monkey_brain_core

@@ -26,6 +26,13 @@ public:
     const ExpressionDescription & description) const = 0;
 
   virtual void register_operator(OperatorDefinition op) = 0;
+
+protected:
+  OperationsFactory() = default;
+  OperationsFactory(const OperationsFactory &) = default;
+  OperationsFactory(OperationsFactory &&) = default;
+  OperationsFactory & operator=(const OperationsFactory &) & = default;
+  OperationsFactory & operator=(OperationsFactory &&) & = default;
 };
 
 } // namespace monkey_brain_core

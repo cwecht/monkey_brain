@@ -18,6 +18,13 @@ class InternalEventRecipient
 public:
   virtual ~InternalEventRecipient() = default;
   virtual void post_internal_event(std::string_view const ref) = 0;
+
+protected:
+  InternalEventRecipient() = default;
+  InternalEventRecipient(const InternalEventRecipient &) = delete;
+  InternalEventRecipient(InternalEventRecipient &&) = delete;
+  InternalEventRecipient & operator=(const InternalEventRecipient &) & = delete;
+  InternalEventRecipient & operator=(InternalEventRecipient &&) & = delete;
 };
 
 class Environment
@@ -33,7 +40,7 @@ public:
   template<typename T>
   T const * get_value(std::string_view const ref) const
   {
-    return reinterpret_cast<T const *>(get_value(ref));
+    return static_cast<T const *>(get_value(ref));
   }
 
   virtual void assign_value(std::string_view const ref, void const * ptr) = 0;

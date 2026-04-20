@@ -33,7 +33,7 @@ public:
     return references_;
   }
 
-  void const * get_value_handle(std::string_view const) const
+  void const * get_value_handle(std::string_view const) const final
   {
     return nullptr;
   }
@@ -48,12 +48,14 @@ public:
     const std::size_t size = basic_logger_.get_expected_length();
 
     std::string buffer(size, '\0');
+    // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     const auto result = basic_logger_.to_chars(buffer.data(), buffer.data() + size + 1UL);
-    buffer.resize(std::distance(buffer.data(), result.ptr));
-    static rcutils_log_location_t __rcutils_logging_location = {__func__, __FILE__, __LINE__};
+    buffer.resize(static_cast<size_t>(std::distance(buffer.data(), result.ptr)));
+    static rcutils_log_location_t rcutils_logging_location = {__func__, __FILE__, __LINE__};
     if (rcutils_logging_logger_is_enabled_for(logger_.get_name(), severity_)) {
+      // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
       rcutils_log_internal(
-        &__rcutils_logging_location, severity_,
+        &rcutils_logging_location, severity_,
         logger_.get_name(), "%s", buffer.c_str());
     }
   }

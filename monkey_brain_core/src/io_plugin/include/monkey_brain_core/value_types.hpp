@@ -2,6 +2,7 @@
 #define MONKEY_BRAIN_CORE_VALUE_TYPE_HPP
 
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -44,26 +45,29 @@ struct ValueTypes
   inline static const ValueType STRING_ARRAY{"string[]"};
 };
 
+namespace
+{
 template<typename Rng, typename T>
-bool __contains(const Rng & rng, T val)
+bool local_contains(const Rng & rng, T val)
 {
   return std::end(rng) != std::find(std::begin(rng), std::end(rng), val);
 }
+} // namespace
 
 inline bool is_signed_integer(ValueType v)
 {
-  const std::string_view signed_integer_types[] = {
+  const std::array signed_integer_types = {
     ValueTypes::INT8, ValueTypes::INT16, ValueTypes::INT32, ValueTypes::INT64
   };
-  return __contains(signed_integer_types, v);
+  return local_contains(signed_integer_types, v);
 }
 
 inline bool is_unsigned_integer(ValueType v)
 {
-  const std::string_view unsigned_integer_types[] = {
+  const std::array unsigned_integer_types = {
     ValueTypes::UINT8, ValueTypes::UINT16, ValueTypes::UINT32, ValueTypes::UINT64
   };
-  return __contains(unsigned_integer_types, v);
+  return local_contains(unsigned_integer_types, v);
 }
 
 inline bool is_floating_point(ValueType v)
@@ -99,7 +103,7 @@ ValueType name()
 }
 
 template<typename T>
-constexpr bool is_basic_type = std::is_same_v<T, char>||
+constexpr bool IS_BASIC_TYPE = std::is_same_v<T, char>||
   std::is_same_v<T, bool>||
   std::is_same_v<T, double>||
   std::is_same_v<T, float>||

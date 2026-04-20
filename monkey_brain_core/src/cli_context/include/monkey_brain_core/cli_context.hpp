@@ -12,7 +12,7 @@ namespace monkey_brain_core
 
 class CLIContext : public Context {
 public:
-  CLIContext(int argc, const char * const argv[]);
+  CLIContext(int argc, const char * const * argv);
 
   bool is_dry_run() const override {return true;}
 

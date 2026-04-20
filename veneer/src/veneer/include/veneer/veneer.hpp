@@ -1,5 +1,5 @@
-#ifndef VENEER__HPP
-#define VENEER__HPP
+#ifndef VENEER_HPP
+#define VENEER_HPP
 
 #include <cstdint>
 #include <memory>
@@ -33,12 +33,26 @@ public:
   virtual bool is_enabled_for(LogLevel level) const = 0;
   virtual void log(LogLevel level, const LogLocation & log_location, const char * text, ...) = 0;
   virtual LoggerPtr get_child(const std::string & name) = 0;
+
+protected:
+  Logger() = default;
+  Logger(const Logger &) = delete;
+  Logger(Logger &&) = delete;
+  Logger & operator=(const Logger &) & = delete;
+  Logger & operator=(Logger &&) & = delete;
 };
 
 class LoggerFactory {
 public:
   virtual ~LoggerFactory() = default;
   virtual LoggerPtr get_logger(std::string name) = 0;
+
+protected:
+  LoggerFactory() = default;
+  LoggerFactory(const LoggerFactory &) = delete;
+  LoggerFactory(LoggerFactory &&) = delete;
+  LoggerFactory & operator=(const LoggerFactory &) & = delete;
+  LoggerFactory & operator=(LoggerFactory &&) & = delete;
 };
 
 class ZeroLogger : public Logger {
@@ -67,6 +81,8 @@ public:
 private:
   explicit ZeroLogger() = default;
 };
+
+// NOLINTBEGIN(cppcoreguidelines-macro-usage)
 
 #define VENEER_LOG(level, logger, ...) \
   if (logger != nullptr && logger->is_enabled_for(level)) { \
@@ -107,5 +123,6 @@ private:
   #define VENEER_LOG_ERROR(...) VENEER_LOG(veneer::LOG_ERROR, __VA_ARGS__)
 #endif
 
+// NOLINTEND(cppcoreguidelines-macro-usage)
 } // namespace veneer
-#endif // VENEER__HPP
+#endif // VENEER_HPP

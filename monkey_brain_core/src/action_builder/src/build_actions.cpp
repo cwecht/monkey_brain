@@ -16,21 +16,22 @@ class PerformAction : public Action
 {
 public:
   explicit PerformAction(std::string ref, Environment & env)
-  : reference_{std::move(ref)}, env_{env} {}
+  : reference_{std::move(ref)}, env_{&env} {}
 
   void execute() final
   {
-    env_.perform(reference_);
+    env_->perform(reference_);
   }
 
 private:
   std::string reference_;
-  Environment & env_;
+  Environment * env_;
 };
 
-template<typename ValueT, bool is_cheap_to_copy = is_check_to_return_by_value<ValueT>>
+template<typename ValueT, bool is_cheap_to_copy = IS_CHEAP_TO_RETURN_BY_VALUE<ValueT>>
 class AssignAction;
 
+// NOLINTBEGIN(readability-identifier-naming)
 template<typename T>
 struct InternalRepresentation { using type = T; };
 
@@ -54,6 +55,7 @@ struct InternalRepresentation<uint32_t> { using type = uint64_t; };
 
 template<>
 struct InternalRepresentation<float> { using type = double; };
+// NOLINTEND(readability-identifier-naming)
 
 bool is_assignable_to(ValueType source, ValueType target)
 {
@@ -71,7 +73,7 @@ public:
   explicit AssignAction(std::string target, ExpressionPtr source, Environment & env)
   : target_{std::move(target)}
     , source_{dynamic_cast_move<Expression<InternalT>>(source)}
-    , env_{env}
+    , env_{&env}
   {
     assert(source_ != nullptr);
   }
@@ -79,13 +81,13 @@ public:
   void execute() final
   {
     const ValueT val = static_cast<ValueT>(source_->get());
-    env_.assign_value(target_, &val);
+    env_->assign_value(target_, &val);
   }
 
 private:
   std::string target_;
   std::unique_ptr<Expression<InternalT>> source_;
-  Environment & env_;
+  Environment * env_;
 };
 
 template<typename ValueT>
@@ -95,17 +97,17 @@ public:
   explicit AssignAction(std::string target, ExpressionPtr source, Environment & env)
   : target_{std::move(target)}
     , source_{dynamic_cast_move<Expression<ValueT>>(source)}
-    , env_{env} {}
+    , env_{&env} {}
 
   void execute() final
   {
-    env_.assign_value(target_, static_cast<const void *>(&source_->get()));
+    env_->assign_value(target_, static_cast<const void *>(&source_->get()));
   }
 
 private:
   std::string target_;
   std::unique_ptr<Expression<ValueT>> source_;
-  Environment & env_;
+  Environment * env_;
 };
 
 template<>
@@ -115,17 +117,17 @@ public:
   explicit AssignAction(std::string target, ExpressionPtr source, Environment & env)
   : target_{std::move(target)}
     , source_(dynamic_cast_move<Expression<void>>(source))
-    , env_{env} {}
+    , env_{&env} {}
 
   void execute() final
   {
-    env_.assign_value(target_, source_->get());
+    env_->assign_value(target_, source_->get());
   }
 
 private:
   std::string target_;
   std::unique_ptr<Expression<void>> source_;
-  Environment & env_;
+  Environment * env_;
 };
 
 template<typename ValueType>
@@ -140,7 +142,7 @@ std::unique_ptr<Action>
 build_assign_action(ValueType type, std::string target, ExpressionPtr expr, Environment & env)
 {
   using MakerFn = std::unique_ptr<Action>(*)(std::string, ExpressionPtr, Environment &);
-  static const std::map<ValueType, MakerFn> kTypesToMakerFn {
+  static const std::map<ValueType, MakerFn> TYPES_TO_MAKER_FN {
     {ValueTypes::BOOL, &make_assign_action<bool>},
     {ValueTypes::CHAR, &make_assign_action<char>},
     {ValueTypes::FLOAT32, &make_assign_action<float>},
@@ -156,8 +158,8 @@ build_assign_action(ValueType type, std::string target, ExpressionPtr expr, Envi
     {ValueTypes::STRING, &make_assign_action<std::string>}
   };
 
-  auto m = kTypesToMakerFn.find(type);
-  if (m == kTypesToMakerFn.end()) {
+  auto m = TYPES_TO_MAKER_FN.find(type);
+  if (m == TYPES_TO_MAKER_FN.end()) {
     return make_assign_action<void>(target, std::move(expr), env);
   }
   return (*m->second)(target, std::move(expr), env);

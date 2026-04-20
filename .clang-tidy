@@ -1,40 +1,49 @@
-Checks: "-*,readability-identifier-naming"
+Checks: 'readability-identifier-naming,
+         cppcoreguidelines-*,
+         abseil-no-namespace,
+         bugprone-*,
+         -bugprone-easily-swappable-parameters,
+         -clang-analyzer-cplusplus.NewDeleteLeaks,-clang-diagnostic-unused-variable'
 CheckOptions:
   - key:             readability-identifier-naming.ClassCase
     value:           CamelCase
   - key:             readability-identifier-naming.ClassMemberCase
     value:           lower_case
   - key:             readability-identifier-naming.ConstexprVariableCase
-    value:           CamelCase
+    value:           UPPER_CASE
   - key:             readability-identifier-naming.ConstexprVariablePrefix
-    value:           k
+    value:           ''
   - key:             readability-identifier-naming.EnumCase
     value:           CamelCase
   - key:             readability-identifier-naming.EnumConstantCase
-    value:           CamelCase
+    value:           UPPER_CASE
   - key:             readability-identifier-naming.EnumConstantPrefix
-    value:           k
+    value:           ''
   - key:             readability-identifier-naming.FunctionCase
-    value:           lower_case
+    value:           CamelCase
   - key:             readability-identifier-naming.GlobalConstantCase
-    value:           CamelCase
+    value:           UPPER_CASE
   - key:             readability-identifier-naming.GlobalConstantPrefix
-    value:           k
-  - key:             readability-identifier-naming.GlobalVariablePrefix
-    value:           g_
+    value:           ''
   - key:             readability-identifier-naming.StaticConstantCase
-    value:           CamelCase
+    value:           UPPER_CASE
   - key:             readability-identifier-naming.StaticConstantPrefix
-    value:           k
+    value:           ''
   - key:             readability-identifier-naming.StaticVariableCase
     value:           lower_case
   - key:             readability-identifier-naming.MacroDefinitionCase
     value:           UPPER_CASE
   - key:             readability-identifier-naming.MacroDefinitionIgnoredRegexp
     value:           '^[A-Z]+(_[A-Z]+)*_$'
-  - key:             readability-identifier-naming.MemberCase
+  - key:             readability-identifier-naming.PrivateMemberCase
+    value:           lower_case
+  - key:             readability-identifier-naming.ProtectedMemberCase
+    value:           lower_case
+  - key:             readability-identifier-naming.PublicMemberCase
     value:           lower_case
   - key:             readability-identifier-naming.PrivateMemberSuffix
+    value:           _
+  - key:             readability-identifier-naming.ProtectedMemberSuffix
     value:           _
   - key:             readability-identifier-naming.PublicMemberSuffix
     value:           ''
@@ -50,3 +59,11 @@ CheckOptions:
     value:           lower_case
   - key:             readability-identifier-naming.IgnoreMainLikeFunctions
     value:           1
+  - key:             readability-identifier-naming.FunctionCase
+    value:           lower_case
+  - key:             readability-identifier-naming.GlobalFunctionCase
+    value:           lower_case
+  - key:             readability-identifier-naming.ConstexprFunctionCase
+    value:           lower_case
+  - key:             readability-identifier-naming.ClassMethodCase
+    value:           lower_case

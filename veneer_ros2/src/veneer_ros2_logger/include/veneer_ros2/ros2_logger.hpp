@@ -1,5 +1,5 @@
-#ifndef VENEER_ROS2_LOGGER__HPP
-#define VENEER_ROS2_LOGGER__HPP
+#ifndef VENEER_ROS2_LOGGER_HPP
+#define VENEER_ROS2_LOGGER_HPP
 
 #include "veneer/veneer.hpp"
 
@@ -34,4 +34,4 @@ private:
 };
 
 } // namespace veneer_ros2
-#endif // VENEER_ROS2_LOGGER__HPP
+#endif // VENEER_ROS2_LOGGER_HPP

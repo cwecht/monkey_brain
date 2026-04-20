@@ -1,5 +1,5 @@
-#ifndef MONKEY_BRAIN_SCXML_VALIDATE_STATE_MACHINE__HPP
-#define MONKEY_BRAIN_SCXML_VALIDATE_STATE_MACHINE__HPP
+#ifndef MONKEY_BRAIN_SCXML_VALIDATE_STATE_MACHINE_HPP
+#define MONKEY_BRAIN_SCXML_VALIDATE_STATE_MACHINE_HPP
 
 #include "monkey_brain_core/environment.hpp"
 #include "monkey_brain_scxml/state_machine_description.hpp"
@@ -19,4 +19,4 @@ ValidationErrors validate_state_machine(
   const monkey_brain_core::Environment & env);
 
 } // namespace monkey_brain_scxml
-#endif // MONKEY_BRAIN_SCXML_VALIDATE_STATE_MACHINE__HPP
+#endif // MONKEY_BRAIN_SCXML_VALIDATE_STATE_MACHINE_HPP

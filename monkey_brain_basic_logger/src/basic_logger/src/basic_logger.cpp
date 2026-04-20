@@ -7,6 +7,7 @@
 #include <charconv>
 #include <cstdint>
 #include <cstring>
+#include <functional>
 #include <numeric>
 
 #include <stdexcept>
@@ -21,6 +22,13 @@ public:
   virtual std::to_chars_result to_chars(char * first, char * last) const = 0;
   virtual std::size_t expected_length() const = 0;
   virtual void assign_value(const void *) = 0;
+
+protected:
+  PrintableValue() = default;
+  PrintableValue(const PrintableValue &) = delete;
+  PrintableValue(PrintableValue &&) = delete;
+  PrintableValue & operator=(const PrintableValue &) & = delete;
+  PrintableValue & operator=(PrintableValue &&) & = delete;
 };
 
 template<typename T, typename Disambiguator = void>
@@ -30,6 +38,7 @@ std::to_chars_result to_chars(const std::string_view value, char * buffer_begin,
 {
   const auto len = std::min(value.size(),
       static_cast<size_t>(std::distance(buffer_begin, buffer_end)));
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   return {std::strncpy(buffer_begin, value.data(), len) + len,
     len != value.size() ? std::errc::value_too_large : std::errc{}};
 }
@@ -44,6 +53,7 @@ std::to_chars_result to_chars(const std::string & value, char * buffer_begin, ch
 {
   const auto len = std::min(value.size(),
       static_cast<size_t>(std::distance(buffer_begin, buffer_end)));
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   return {std::strncpy(buffer_begin, value.c_str(), len) + len,
     len != value.size() ? std::errc::value_too_large : std::errc{}};
 }
@@ -59,6 +69,7 @@ std::to_chars_result to_chars(char value, char * buffer_begin, char * buffer_end
 {
   if (buffer_begin != buffer_end) {
     *buffer_begin = value;
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
     return {buffer_begin + 1, std::errc{}};
   } else {
     return {buffer_end, std::errc::value_too_large};
@@ -100,9 +111,16 @@ template<typename T,
   and not std::is_same_v<T, bool>>>
 std::size_t expected_length(const T & value)
 {
-  std::array<char, 32> buffer{};
+  constexpr size_t MAX_NUMBER_LEN = 32;
+  std::array<char, MAX_NUMBER_LEN> buffer{};
   const auto [ptr, _] = std::to_chars(buffer.begin(), buffer.end(), value);
-  return std::distance(buffer.begin(), ptr);
+  return static_cast<size_t>(std::distance(buffer.begin(), ptr));
+}
+
+template<typename T>
+std::size_t get_expected_length(const T & t)
+{
+  return expected_length(t) + 2UL;
 }
 
 template<typename T>
@@ -111,9 +129,8 @@ std::size_t expected_length(const std::vector<T> & vs)
   if (vs.empty()) {
     return 2UL;
   }
-  constexpr auto get_expected_length = [](const T & t) {return expected_length(t) + 2UL;};
   return 2UL + expected_length(*vs.begin()) + std::transform_reduce(
-      std::next(vs.begin()), vs.end(), 0UL, std::plus<>{}, get_expected_length);
+      std::next(vs.begin()), vs.end(), 0UL, std::plus<>{}, get_expected_length<T>);
 }
 
 template<typename T>
@@ -135,11 +152,11 @@ public:
   void assign_value(const void * ptr) final
   {
     if (ptr == nullptr) {throw std::runtime_error("can not assign from NULL ptr");}
-    value_ = *reinterpret_cast<const T *>(ptr);
+    value_ = *static_cast<const T *>(ptr);
   }
 
 private:
-  T value_;
+  T value_{};
 };
 
 std::unique_ptr<PrintableValue> create_printable(const monkey_brain_core::ValueType type)
@@ -230,10 +247,9 @@ BasicLogger::assign_value(std::string_view const reference, void const * ptr)
 std::size_t
 BasicLogger::get_expected_length() const
 {
-  constexpr auto kGetExpectedLength = [](const auto & t) {return t->expected_length();};
   return std::transform_reduce(
     tokens_.begin(),
-    tokens_.end(), 0UL, std::plus<>{}, kGetExpectedLength);
+    tokens_.end(), 0UL, std::plus<>{}, std::mem_fn(&PrintableValue::expected_length));
 }
 
 std::to_chars_result

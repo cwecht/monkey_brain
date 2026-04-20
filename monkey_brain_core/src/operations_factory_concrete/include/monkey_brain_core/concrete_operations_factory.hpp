@@ -26,7 +26,7 @@ public:
   void register_operator(OperatorDefinition op) override;
 
 private:
-  Environment & env_;
+  Environment & env_; //NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
   OperatorRegistry operator_registry_;
 };
 

@@ -57,8 +57,6 @@ make_descision_engine(
 {
   monkey_brain_core::ConreteOperationsFactory ops_factory{make_operations_factory(node, env,
           plugin_loader)};
-  const std::string path_to_ios =
-    node->get_parameter("path_to_ios").get_value<std::string>();
 
   const std::string decision_engine_name =
     node->get_parameter_or("decision_engine", std::string{"scxml_state_machine"});

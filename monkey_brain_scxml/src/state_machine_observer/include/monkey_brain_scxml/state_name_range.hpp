@@ -14,18 +14,20 @@ namespace monkey_brain_scxml
 class StateNameIterator
 {
 public:
+  // NOLINTBEGIN(readability-identifier-naming)
   using iterator_category = std::forward_iterator_tag;
   using value_type = std::string_view;
   using difference_type = std::ptrdiff_t;
   using pointer = std::string_view *;
   using reference = std::string_view;
+  // NOLINTEND(readability-identifier-naming)
 
   explicit StateNameIterator(State const * const * it)
   : iterator_{it} {}
 
   std::string_view operator*() const {return (*iterator_)->name;}
 
-  StateNameIterator & operator++() {++iterator_; return *this;}
+  StateNameIterator & operator++() {std::advance(iterator_, 1); return *this;}
 
   friend bool operator==(const StateNameIterator & lhs, const StateNameIterator & rhs)
   {
@@ -37,9 +39,9 @@ public:
     return lhs.iterator_ != rhs.iterator_;
   }
 
-  StateNameIterator operator+(std::size_t offset) const
+  StateNameIterator operator+(difference_type offset) const
   {
-    return StateNameIterator{iterator_ + offset};
+    return StateNameIterator{std::next(iterator_, offset)};
   }
 
   StateNameIterator operator++(int)
@@ -56,8 +58,10 @@ private:
 class StateNameRange
 {
 public:
+  // NOLINTBEGIN(readability-identifier-naming)
   using value_type = std::string_view;
   using const_iterator = StateNameIterator;
+  // NOLINTEND(readability-identifier-naming)
 
   template<typename Range>
   explicit StateNameRange(const Range & states)

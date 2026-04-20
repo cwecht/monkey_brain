@@ -34,7 +34,7 @@ public:
   : fun_{fun}
     , expressions_{convert(std::move(p_expressions))} {}
 
-  virtual ReturnType get() const final
+  ReturnType get() const final
   {
     const auto op = [this](ExpressionReturnType<ValueType> akk, const LocalExpressionPtr & v)
       {return fun_(akk, v->get());};
@@ -232,18 +232,18 @@ void register_comparison_operators(OperatorRegistry & registry)
       &make_comparison_condition<Value, &greater_equals<Value>>);
 }
 
-ExpressionWithType make_NOT(Expressions expressions)
+ExpressionWithType make_not(Expressions expressions)
 {
   return {std::make_unique<NotExpression>(std::move(expressions.front())), ValueTypes::BOOL};
 }
 
-ExpressionWithType make_AND(Expressions expressions)
+ExpressionWithType make_and(Expressions expressions)
 {
   return {make_logical_expression(
       [](bool lhs, bool rhs) {return lhs and rhs;}, std::move(expressions)), ValueTypes::BOOL};
 }
 
-ExpressionWithType make_OR(Expressions expressions)
+ExpressionWithType make_or(Expressions expressions)
 {
   return {make_logical_expression(
       [](bool lhs, bool rhs) {return lhs or rhs;}, std::move(expressions)), ValueTypes::BOOL};
@@ -262,7 +262,7 @@ public:
     assert(expression_ != nullptr);
   }
 
-  virtual ReturnType get() const final
+  ReturnType get() const final
   {
     return static_cast<TargetType>(expression_->get());
   }
@@ -308,9 +308,9 @@ OperatorRegistry::OperatorRegistry()
   register_comparison_operators<uint64_t>(*this);
   register_comparison_operators<std::string>(*this);
 
-  register_operator({"NOT", {ValueTypes::BOOL}, false}, &make_NOT);
-  register_operator({"AND", {ValueTypes::BOOL}, true}, &make_AND);
-  register_operator({"OR", {ValueTypes::BOOL}, true}, &make_OR);
+  register_operator({"NOT", {ValueTypes::BOOL}, false}, &make_not);
+  register_operator({"AND", {ValueTypes::BOOL}, true}, &make_and);
+  register_operator({"OR", {ValueTypes::BOOL}, true}, &make_or);
 
   register_casts_from<int64_t>(*this);
   register_casts_from<uint64_t>(*this);
@@ -321,8 +321,8 @@ ExpressionWithType OperatorRegistry::create_expression(
   OperatorDescriptor op_desc,
   Expressions p_expressions) const
 {
-  auto m = to_functional_expression_maker.find(op_desc);
-  if (m == to_functional_expression_maker.end()) {
+  auto m = to_functional_expression_maker_.find(op_desc);
+  if (m == to_functional_expression_maker_.end()) {
     const auto ps = op_desc.parameter_types;
     std::stringstream os;
     std::copy(ps.begin(), ps.end(), std::ostream_iterator<ValueType>(os, ", "));
@@ -334,7 +334,7 @@ ExpressionWithType OperatorRegistry::create_expression(
 
 void OperatorRegistry::register_operator(OperatorDescriptor descriptor, ExpressionMakerFn maker_fn)
 {
-  to_functional_expression_maker.emplace(std::move(descriptor), std::move(maker_fn));
+  to_functional_expression_maker_.emplace(std::move(descriptor), std::move(maker_fn));
 }
 
 std::size_t OperatorRegistry::Hash::operator()(const OperatorDescriptor & s) const noexcept
