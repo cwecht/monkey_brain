@@ -251,7 +251,7 @@ void StateMachine::post_event(const std::string_view event)
 
 void StateMachine::process_internal_events()
 {
-  const auto select_matcher_and_event = [this]() -> std::pair<std::string_view, event_matcher> {
+  const auto select_matcher_and_event = [this]() -> std::pair<std::string_view, EventMatcher> {
       if (has_optimal_null_transitions()) {
         return {"", &select_null_events};
       } else if (not internal_events_.empty()) {
@@ -493,14 +493,14 @@ void StateMachine::enter_states(
     }
   }
 #if (VENEER_LOG_MIN_SEVERITY == VENEEER_LOG_SEVERITY_DEBUG)
-  constexpr auto to_string = [](std::string_view sv) {return std::string{sv};};
+  constexpr auto TO_STRING = [](std::string_view sv) {return std::string{sv};};
   const std::string active_states = boost::algorithm::join(this->active_states() |
-      boost::adaptors::transformed(to_string), ", ");
+      boost::adaptors::transformed(TO_STRING), ", ");
   VENEER_LOG_DEBUG(logger_, "entered states: %s", active_states.c_str());
 #endif
 }
 
-void StateMachine::post_event_internal(const std::string_view event, event_matcher event_matches)
+void StateMachine::post_event_internal(const std::string_view event, EventMatcher event_matches)
 {
   selected_transitions_.clear();
   for (State const * old_state : active_states_) {
@@ -567,11 +567,11 @@ void StateMachine::post_final_events(State const * state)
 }
 
 Transition const * StateMachine::find_matching_transition(
-  const State & state, std::string_view event, event_matcher event_matches) const
+  const State & state, std::string_view event, EventMatcher event_matches) const
 {
   const auto & transitions = state.transitions;
   auto transition = std::find_if(
-    transitions.begin(), transitions.end(), [event_matches, event, this](const auto & t) {
+    transitions.begin(), transitions.end(), [event_matches, event](const auto & t) {
       return event_matches(t, event) && holds(t.condition);
     });
 
@@ -620,7 +620,7 @@ bool StateMachine::has_optimal_null_transitions() const
 {
   return std::any_of(
     null_preselected_transitions_.begin(), null_preselected_transitions_.end(),
-    [this](auto * e) {return holds(e->condition);});
+    [](Transition const * t) {return holds(t->condition);});
 }
 
 void StateMachine::preallocate_current_states(std::size_t capacity)

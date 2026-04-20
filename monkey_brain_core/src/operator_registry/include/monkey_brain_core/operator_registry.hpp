@@ -19,7 +19,7 @@ class OperatorRegistry
 public:
   OperatorRegistry();
   ExpressionWithType create_expression(
-    OperatorDescriptor op_desc,
+    const OperatorDescriptor & op_desc,
     Expressions p_expressions) const;
 
   void register_operator(OperatorDescriptor descriptor, ExpressionMakerFn maker_fn);
@@ -38,7 +38,7 @@ private:
   using TypesAndOpsToExpressionMakerFn =
     std::unordered_map<OperatorDescriptor, ExpressionMakerFn, Hash, EqualTo>;
 
-  TypesAndOpsToExpressionMakerFn to_functional_expression_maker;
+  TypesAndOpsToExpressionMakerFn to_functional_expression_maker_;
 };
 
 } // namespace monkey_brain_core

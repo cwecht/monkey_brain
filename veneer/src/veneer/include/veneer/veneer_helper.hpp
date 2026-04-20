@@ -1,5 +1,5 @@
-#ifndef VENEER_HELPER__HPP
-#define VENEER_HELPER__HPP
+#ifndef VENEER_HELPER_HPP
+#define VENEER_HELPER_HPP
 
 #include "veneer/veneer.hpp"
 
@@ -18,4 +18,4 @@ constexpr inline const char * to_string(LogLevel level)
 }
 
 } // namespace veneer
-#endif // VENEER_HELPER__HPP
+#endif // VENEER_HELPER_HPP

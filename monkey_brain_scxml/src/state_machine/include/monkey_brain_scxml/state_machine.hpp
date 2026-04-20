@@ -50,14 +50,14 @@ public:
   }
 
 private:
-  using event_matcher = bool (*)(const Transition &, std::string_view);
+  using EventMatcher = bool (*)(const Transition &, std::string_view);
   void post_final_events(State const * state);
   void process_internal_events();
   void process_optimal_null_transitions();
-  void post_event_internal(const std::string_view event, event_matcher event_matches);
+  void post_event_internal(const std::string_view event, EventMatcher event_matches);
   Transition const * find_matching_transition(
     const State & state,
-    std::string_view event, event_matcher event_matches) const;
+    std::string_view event, EventMatcher event_matches) const;
   bool leave_common_subset_of_states(
     const Transition & a,
     const Transition & b) const;

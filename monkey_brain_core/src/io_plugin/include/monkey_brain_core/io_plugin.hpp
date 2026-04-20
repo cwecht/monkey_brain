@@ -39,6 +39,13 @@ public:
     event_recipient_->post_event(event);
   }
 
+protected:
+  IOPlugin() = default;
+  IOPlugin(const IOPlugin &) = delete;
+  IOPlugin(IOPlugin &&) = delete;
+  IOPlugin & operator=(const IOPlugin &) & = delete;
+  IOPlugin & operator=(IOPlugin &&) & = delete;
+
 private:
   EventRecipient * event_recipient_ = nullptr;
 };

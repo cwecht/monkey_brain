@@ -15,25 +15,25 @@ void * parse_parameter(const std::type_info & type, const std::string & param)
   std::stringstream ss{param};
   using monkey_brain_core::Context;
   if (type == typeid(bool)) {
-    static_assert(Context::is_supported<bool>);
+    static_assert(Context::IS_SUPPORTED<bool>);
     static bool boolean;
     ss >> std::boolalpha >> boolean;
     return &boolean;
   }
   if (type == typeid(int64_t)) {
-    static_assert(Context::is_supported<int64_t>);
+    static_assert(Context::IS_SUPPORTED<int64_t>);
     static int64_t integer;
     ss >> integer;
     return &integer;
   }
   if (type == typeid(double)) {
-    static_assert(Context::is_supported<double>);
+    static_assert(Context::IS_SUPPORTED<double>);
     static double floating;
     ss >> floating;
     return &floating;
   }
   if (type == typeid(std::string)) {
-    static_assert(Context::is_supported<std::string>);
+    static_assert(Context::IS_SUPPORTED<std::string>);
     static std::string para;
     para = param;
     return &para;
@@ -45,7 +45,7 @@ void * parse_parameter(const std::type_info & type, const std::string & param)
 
 } // namespace
 
-CLIContext::CLIContext(int argc, const char * const argv[])
+CLIContext::CLIContext(int argc, const char * const * argv)
 : argc_{argc}, argv_{argv} {}
 
 void const * CLIContext::declare_parameter_impl(
@@ -56,6 +56,7 @@ void const * CLIContext::declare_parameter_impl(
   const auto starts_with = [&parameter_prefix] (std::string_view arg) {
       return arg.find(parameter_prefix) == 0;
     };
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   const auto argv_end = argv_ + argc_;
   auto p = std::find_if(argv_, argv_end, starts_with);
   if (p == argv_end) {
@@ -67,6 +68,7 @@ void const * CLIContext::declare_parameter_impl(
     }
   }
 
+  // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
   const std::string param = *p + parameter_prefix.size();
   return parse_parameter(type, param);
 }

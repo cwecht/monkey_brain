@@ -7,6 +7,7 @@ namespace monkey_brain_core
 {
 
 template<typename Target, typename Source>
+// NOLINTNEXTLINE(cppcoreguidelines-missing-std-forward)
 std::unique_ptr<Target> dynamic_cast_move(Source && s)
 {
   return std::unique_ptr<Target>(dynamic_cast<Target *>(s.release()));

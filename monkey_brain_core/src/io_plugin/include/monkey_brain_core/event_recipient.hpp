@@ -11,6 +11,13 @@ class EventRecipient
 public:
   virtual ~EventRecipient() = default;
   virtual void post_event(const std::string_view) = 0;
+
+protected:
+  EventRecipient() = default;
+  EventRecipient(const EventRecipient &) = delete;
+  EventRecipient(EventRecipient &&) = delete;
+  EventRecipient & operator=(const EventRecipient &) & = delete;
+  EventRecipient & operator=(EventRecipient &&) & = delete;
 };
 
 } // namespace monkey_brain_core

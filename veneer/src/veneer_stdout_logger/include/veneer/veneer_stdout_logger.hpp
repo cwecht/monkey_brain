@@ -1,5 +1,5 @@
-#ifndef VENEER_STDOUT_LOGGER__HPP
-#define VENEER_STDOUT_LOGGER__HPP
+#ifndef VENEER_STDOUT_LOGGER_HPP
+#define VENEER_STDOUT_LOGGER_HPP
 
 #include "veneer/veneer.hpp"
 
@@ -25,4 +25,4 @@ private:
 };
 
 } // namespace veneer
-#endif // VENEER_STDOUT_LOGGER__HPP
+#endif // VENEER_STDOUT_LOGGER_HPP

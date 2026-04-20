@@ -14,23 +14,30 @@ class ExpressionBase
 {
 public:
   virtual ~ExpressionBase() = default;
+
+protected:
+  ExpressionBase() = default;
+  ExpressionBase(const ExpressionBase &) = delete;
+  ExpressionBase(ExpressionBase &&) = delete;
+  ExpressionBase & operator=(const ExpressionBase &) & = delete;
+  ExpressionBase & operator=(ExpressionBase &&) & = delete;
 };
 
 using ExpressionPtr = std::unique_ptr<ExpressionBase>;
 using Expressions = std::vector<ExpressionPtr>;
 
 template<typename T>
-inline constexpr std::size_t size_of = sizeof(T);
+inline constexpr std::size_t SIZE_OF = sizeof(T);
 
 template<>
-inline constexpr std::size_t size_of<void> = 0UL;
+inline constexpr std::size_t SIZE_OF<void> = 0UL;
 
 template<typename T>
-inline constexpr bool is_check_to_return_by_value =
-  std::is_trivially_copyable_v<T>&& (size_of<T>< sizeof(std::int64_t) * 2);
+inline constexpr bool IS_CHEAP_TO_RETURN_BY_VALUE =
+  std::is_trivially_copyable_v<T>&& (SIZE_OF<T>< sizeof(std::int64_t) * 2);
 
 template<typename T>
-using ExpressionReturnType = std::conditional_t<is_check_to_return_by_value<T>, T, T const &>;
+using ExpressionReturnType = std::conditional_t<IS_CHEAP_TO_RETURN_BY_VALUE<T>, T, T const &>;
 
 template<typename ExpressionType>
 class Expression : public ExpressionBase
@@ -60,7 +67,7 @@ struct ExpressionWithType
   std::string type;
 };
 
-template<typename ValueType, bool is_cheap_to_copy = is_check_to_return_by_value<ValueType>>
+template<typename ValueType, bool is_cheap_to_copy = IS_CHEAP_TO_RETURN_BY_VALUE<ValueType>>
 struct ValueStore;
 
 template<typename ValueType>

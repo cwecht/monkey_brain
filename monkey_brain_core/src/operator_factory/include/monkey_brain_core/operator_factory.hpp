@@ -32,6 +32,13 @@ class OperatorFactory
 public:
   virtual ~OperatorFactory() = default;
   virtual OperatorDefinitions create_operation() = 0;
+
+protected:
+  OperatorFactory() = default;
+  OperatorFactory(const OperatorFactory &) = delete;
+  OperatorFactory(OperatorFactory &&) = delete;
+  OperatorFactory & operator=(const OperatorFactory &) & = delete;
+  OperatorFactory & operator=(OperatorFactory &&) & = delete;
 };
 
 } // namespace monkey_brain_core

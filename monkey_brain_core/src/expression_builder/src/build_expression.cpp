@@ -23,13 +23,13 @@ public:
 
   using ReturnType = typename Expression<ValueType>::ReturnType;
 
-  virtual ReturnType get() const final
+  ReturnType get() const final
   {
     return *ptr_;
   }
 
 private:
-  const UnderlyingType * const ptr_;
+  const UnderlyingType * ptr_;
 };
 
 template<>
@@ -39,13 +39,13 @@ public:
   explicit EnvironemntValue(const Environment & env, std::string_view ref)
   : ptr_{env.get_value<void>(ref)} {}
 
-  virtual void const * get() const final
+  void const * get() const final
   {
     return ptr_;
   }
 
 private:
-  const void * const ptr_;
+  const void * ptr_;
 };
 
 template<typename ValueType>
@@ -57,7 +57,7 @@ public:
 
   using ReturnType = typename Expression<ValueType>::ReturnType;
 
-  virtual ReturnType get() const final
+  ReturnType get() const final
   {
     return value_;
   }
@@ -101,7 +101,7 @@ ExpressionWithType build_reference(
   ValueType type = env.get_type_of(std::get<std::string>(val.arg)).value_or(type);
   using MakerFn = ExpressionWithType(*)(const std::string &, const Environment &,
         std::optional<std::string>);
-  static const std::map<ValueType, MakerFn> kTypesToMakerFn = {
+  static const std::map<ValueType, MakerFn> TYPES_TO_MAKER_FN = {
     {ValueTypes::BOOL, (MakerFn) & make_value<bool, bool>},
     {ValueTypes::CHAR, (MakerFn) & make_value<char, char>},
     {ValueTypes::FLOAT32, (MakerFn) & make_value<double, float>},
@@ -115,8 +115,8 @@ ExpressionWithType build_reference(
     {ValueTypes::INT64, (MakerFn) & make_value<int64_t, int64_t>},
     {ValueTypes::UINT64, (MakerFn) & make_value<uint64_t, uint64_t>},
     {ValueTypes::STRING, (MakerFn) & make_value<std::string, std::string>}};
-  auto m = kTypesToMakerFn.find(type);
-  if (m == kTypesToMakerFn.end()) {
+  auto m = TYPES_TO_MAKER_FN.find(type);
+  if (m == TYPES_TO_MAKER_FN.end()) {
     return make_value<void>(std::get<std::string>(val.arg), env, type);
   }
   return (*m->second)(std::get<std::string>(val.arg), env, {});

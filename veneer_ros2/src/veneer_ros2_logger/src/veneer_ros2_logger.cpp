@@ -24,6 +24,7 @@ int to_rcutils_severitiy(veneer::LogLevel level)
 
 veneer::LoggerPtr ROS2Logger::Factory::get_logger(std::string name)
 {
+  // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
   return {new ROS2Logger(name), [](Logger * logger) {delete logger;}};
 }
 
@@ -45,6 +46,7 @@ void ROS2Logger::log(
   veneer::LogLevel level, const veneer::LogLocation & log_location,
   const char * fmt, ...)
 {
+  // NOLINTBEGIN(cppcoreguidelines-pro-type-vararg, cppcoreguidelines-pro-type-vararg,cppcoreguidelines-pro-bounds-array-to-pointer-decay)
   rcutils_log_location_t location = {log_location.func, log_location.file, log_location.line};
   va_list args;
   va_start(args, fmt);
@@ -52,16 +54,19 @@ void ROS2Logger::log(
   vasprintf(&text, fmt, args);
   va_end(args);
   rcutils_log(&location, to_rcutils_severitiy(level), logger_.get_name(), "%s", text);
-  free(text);
+  free(text); // NOLINT(cppcoreguidelines-no-malloc, cppcoreguidelines-owning-memory)
+  // NOLINTEND(cppcoreguidelines-pro-type-vararg, cppcoreguidelines-pro-type-vararg,cppcoreguidelines-pro-bounds-array-to-pointer-decay)
 }
 
 veneer::LoggerPtr ROS2Logger::get_child(const std::string & name)
 {
+  // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
   return {new ROS2Logger(logger_, name), [](Logger * logger) {delete logger;}};
 }
 
 veneer::LoggerPtr ROS2Logger::make(const rclcpp::Node * node)
 {
+  // NOLINTNEXTLINE(cppcoreguidelines-owning-memory)
   return {new ROS2Logger(node), [](Logger * logger) {delete logger;}};
 }
 } // namespace veneer_ros2

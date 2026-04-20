@@ -29,13 +29,13 @@ std::vector<std::string> parse_operator_instances(const YAML::Node & node)
 
 } // namespace
 
-PluginInstances parse_plugin_instances(const std::string path)
+PluginInstances parse_plugin_instances(const std::string & path)
 {
   YAML::Node config = YAML::LoadFile(path);
   return parse_instances(config["io"]);
 }
 
-std::vector<std::string> parse_operator_plugin_instances(const std::string path)
+std::vector<std::string> parse_operator_plugin_instances(const std::string & path)
 {
   YAML::Node config = YAML::LoadFile(path);
   return parse_operator_instances(config["operators"]);

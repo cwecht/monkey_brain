@@ -16,10 +16,12 @@ struct ActionDescription
   std::string type;
   std::vector<ExpressionDescription> arguments;
 
-  friend bool operator==(const ActionDescription & a, const ActionDescription & b) noexcept
+private:
+  decltype(auto) memberwise() const {return std::tie(type, arguments);}
+
+  friend bool operator==(const ActionDescription & a, const ActionDescription & b)
   {
-    constexpr auto tie = [] (const auto & d) {return std::tie(d.type, d.arguments);};
-    return tie(a) == tie(b);
+    return a.memberwise() == b.memberwise();
   }
 };
 

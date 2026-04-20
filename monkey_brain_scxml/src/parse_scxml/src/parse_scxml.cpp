@@ -82,10 +82,12 @@ std::string parse_optional_attribute(char const * const name, XMLElement * state
 
 monkey_brain_core::ActionDescriptions parse_xml_raise_action(XMLElement * action)
 {
-  return {monkey_brain_core::ActionDescription{
-      "RAISE",
-      {monkey_brain_core::parse_expression(parse_attribute("event", action)).value()}
-    }};
+  const auto arg = parse_attribute("event", action);
+  auto expression = monkey_brain_core::parse_expression(arg);
+  if (not expression) {
+    throw std::runtime_error("Invalid event in RAISE tag");
+  }
+  return {monkey_brain_core::ActionDescription{"RAISE", {std::move(*expression)}}};
 }
 
 monkey_brain_core::ActionDescriptions parse_script(XMLElement * script)
@@ -98,7 +100,7 @@ monkey_brain_core::ActionDescriptions parse_script(XMLElement * script)
 }
 
 monkey_brain_core::ActionDescriptions flatten(
-  const std::vector<monkey_brain_core::ActionDescriptions> ds)
+  const std::vector<monkey_brain_core::ActionDescriptions> & ds)
 {
   monkey_brain_core::ActionDescriptions flat_ds;
   for (const auto & actions : ds) {

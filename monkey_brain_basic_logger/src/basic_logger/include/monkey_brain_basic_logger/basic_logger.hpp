@@ -20,6 +20,11 @@ public:
     const monkey_brain_core::TypedReferences & references);
   ~BasicLogger();
 
+  BasicLogger(const BasicLogger &) = delete;
+  BasicLogger(BasicLogger &&) = delete;
+  BasicLogger & operator=(const BasicLogger &) & = delete;
+  BasicLogger & operator=(BasicLogger &&) & = delete;
+
   void assign_value(std::string_view const reference, void const * ptr);
 
   std::size_t get_expected_length() const;

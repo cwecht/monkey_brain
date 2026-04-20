@@ -12,7 +12,7 @@ PluginLoader::create_io_plugin(std::any node, const PluginInstance & instance)
       "monkey_brain", "monkey_brain_core::IOPluginFactory");
   }
   auto factory = io_plugin_loader_->createUniqueInstance(instance.name);
-  return factory->instantiate(node, instance.topic, instance.params);
+  return factory->instantiate(std::move(node), instance.topic, instance.params);
 }
 
 monkey_brain_core::OperatorDefinitions

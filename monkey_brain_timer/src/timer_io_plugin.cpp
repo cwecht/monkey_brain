@@ -21,7 +21,7 @@ public:
     return {{timer_name_, mbc::ValueTypes::UINT64, mbc::AccessMode::READONLY}};
   }
 
-  void const * get_value_handle(std::string_view const) const
+  void const * get_value_handle(std::string_view const) const final
   {
     return &counter_;
   }
