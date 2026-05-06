@@ -37,7 +37,7 @@ struct AYasminStateObserver : ROSEnabledTest
 
   yasmin_msgs::msg::StateMachine last_msg;
   std::promise<void> signal;
-  rclcpp::Node node{"subscriber"};
+  rclcpp::Node node{"subscriber", rclcpp::NodeOptions{}.use_intra_process_comms(true)};
   monkey_brain_ros_utils::ROSContext context{&node};
   std::shared_ptr<rclcpp::SubscriptionBase> subscription =
     node.create_subscription<yasmin_msgs::msg::StateMachine>(
