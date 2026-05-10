@@ -1,4 +1,4 @@
-name: Rolling Build & Test
+name: Kilted Build & Test
 
 on:
   push:
@@ -7,12 +7,12 @@ on:
     - cron: "0 5 * * 1"
 
 jobs:
-  rolling_build_and_test:
+  kilted_build_and_test:
     runs-on: ubuntu-latest
     container:
-      image: rostooling/setup-ros-docker:ubuntu-noble-ros-rolling-desktop-latest
+      image: rostooling/setup-ros-docker:ubuntu-noble-ros-kilted-desktop-latest
     steps:
       - name: Build and run tests
         uses: ros-tooling/action-ros-ci@v0.4
         with:
-          target-ros2-distro: rolling
+          target-ros2-distro: kilted
