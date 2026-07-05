@@ -15,7 +15,6 @@ find_package(yaml-cpp REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(monkey_brain_core REQUIRED)
 find_package(monkey_brain_ros_utils REQUIRED)
-#find_package(veneer REQUIRED)
 
 add_library(plugins_parser src/plugins_parser/src/plugins_parser.cpp)
 target_include_directories(plugins_parser PUBLIC src/plugins_parser/include)

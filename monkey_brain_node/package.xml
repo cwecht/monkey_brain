@@ -12,8 +12,6 @@
   <depend>monkey_brain_core</depend>
   <depend>monkey_brain_ros_utils</depend>
   <depend>pluginlib</depend>
-  <depend>veneer</depend>
-  <depend>veneer_ros2</depend>
   
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
